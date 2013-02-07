@@ -1,0 +1,360 @@
+﻿<common:LayoutAwarePage
+    x:Name="pageRoot"
+    x:Class="RunningTotal.RunDetailsPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RunningTotal"
+	xmlns:maps="using:Infragistics.Controls.Maps"
+    xmlns:common="using:RunningTotal.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Charts="using:Infragistics.Controls.Charts" mc:Ignorable="d">
+
+    <common:LayoutAwarePage.Resources>
+        <Style x:Key="CustomGridViewItemStyle" TargetType="GridViewItem">
+            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TabNavigation" Value="Local"/>
+            <Setter Property="IsHoldingEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridViewItem">
+                        <Border >
+                            <ContentPresenter x:Name="contentPresenter" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </common:LayoutAwarePage.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}">
+    	<Grid.Background>
+    		<ImageBrush Stretch="UniformToFill" ImageSource="Assets/road.png"/>
+    	</Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Horizontal scrolling grid used in most view states -->
+        <Grid
+            x:Name="itemGridView"
+            AutomationProperties.AutomationId="ItemGridView"
+            AutomationProperties.Name="Grouped Items"
+            Grid.RowSpan="2"
+            
+            IsTapEnabled="False"
+            IsRightTapEnabled="False"
+            IsDoubleTapEnabled="False"
+            IsHoldingEnabled="False" Grid.Column="1">
+        	<Grid.ColumnDefinitions>
+        		<ColumnDefinition Width="120"/>
+        		<ColumnDefinition Width="225"/>
+        		<ColumnDefinition/>
+        	</Grid.ColumnDefinitions>
+
+            <!--<GridView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Grid Margin="1,0,0,6">
+                                <Button
+                                    AutomationProperties.Name="Group Title"
+                                    Style="{StaticResource TextPrimaryButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
+                                        <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.Panel>
+                        <ItemsPanelTemplate>
+                            <VariableSizedWrapGrid Orientation="Vertical" Margin="0,0,80,0"/>
+                        </ItemsPanelTemplate>
+                    </GroupStyle.Panel>
+                </GroupStyle>
+            </GridView.GroupStyle>-->
+
+            <GridViewItem  Style="{StaticResource CustomGridViewItemStyle}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.Column="1" Margin="0,140,0,0">
+                <Grid Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Style="{StaticResource GroupHeaderTextStyle}" Text="{Binding RunDate}"/>
+                    <Rectangle Fill="#7F000000" HorizontalAlignment="Left" Height="384" VerticalAlignment="Top" Width="225" Margin="0,10,0,0" Grid.Row="1"/>
+                    <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                        <!--<TextBlock Text="{Binding Summary}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
+                    <TextBlock Text="{Binding TotalActivities}" Margin="0,0,18,10" Style="{StaticResource BodyTextStyle}"/>
+                    <TextBlock Text="{Binding TotalDistanceRun}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>-->
+                        <Grid  Height="120" Margin="0,0,0,10" Width="225" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="234"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="20,10,0,0"  FontSize="56" Foreground="#DEFFFFFF" Style="{StaticResource SubheaderTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" LineHeight="96" Text="{Binding TotalDistanceRun}" LineStackingStrategy="MaxHeight" Height="66" FontFamily="Segoe UI Light"/>
+                            <TextBlock Text="miles traveled" Margin="20,68,0,0"  FontSize="26.667" Foreground="#DEFFFFFF" VerticalAlignment="Top" Style="{StaticResource SubheaderTextStyle}" Height="30" TextAlignment="Center" HorizontalAlignment="Left" FontFamily="Segoe UI Light"/>
+                        </Grid>
+                        <Grid Width="225"  Height="120" Margin="0,0,0,10" HorizontalAlignment="Left">
+                            <!--<Grid.ColumnDefinitions>
+                            	<ColumnDefinition Width="234"/>
+                            </Grid.ColumnDefinitions>
+                        	<TextBlock Margin="14,22,13,0"  FontSize="48" Foreground="#DEFFFFFF" Style="{StaticResource SubheaderTextStyle}" HorizontalAlignment="Center" VerticalAlignment="Top" LineHeight="64" Text="{Binding TotalTime}"/>
+                        	<TextBlock Text="total activity time" Margin="0,99,0,31"  FontSize="24" Foreground="#DEFFFFFF" VerticalAlignment="Center" Style="{StaticResource SubheaderTextStyle}" Height="30" TextAlignment="Center"/>-->
+							<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="234"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="20,10,0,0"  FontSize="56" Foreground="#DEFFFFFF" Style="{StaticResource SubheaderTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" LineHeight="96" Text="{Binding TotalTime}" LineStackingStrategy="MaxHeight" Height="66" FontFamily="Segoe UI Light"/>
+                            <TextBlock Text="duration" Margin="20,68,0,0"  FontSize="26.667" Foreground="#DEFFFFFF" VerticalAlignment="Top" Style="{StaticResource SubheaderTextStyle}" Height="30" TextAlignment="Center" HorizontalAlignment="Left" FontFamily="Segoe UI Light"/>
+                        </Grid>
+                        
+                        <Grid Width="225" Height="120" Margin="0,0,0,10" HorizontalAlignment="Left">
+                            <!--<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="234"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding CaloriesBurned}" Margin="0,7,0,0"  FontSize="85.333" Foreground="#DEFFFFFF" Style="{StaticResource SubheaderTextStyle}" HorizontalAlignment="Center" VerticalAlignment="Top" LineHeight="96"/>
+                            <TextBlock Text="calories burned" Margin="0,99,0,31"  FontSize="24" Foreground="#DEFFFFFF" VerticalAlignment="Center" Style="{StaticResource SubheaderTextStyle}" Height="30" TextAlignment="Center"/>-->
+							<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="234"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="20,10,0,0"  FontSize="56" Foreground="#DEFFFFFF" Style="{StaticResource SubheaderTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" LineHeight="96" Text="{Binding CaloriesBurned}" LineStackingStrategy="MaxHeight" Height="66" FontFamily="Segoe UI Light"/>
+                            <TextBlock Text="calories burned" Margin="20,68,0,0"  FontSize="26.667" Foreground="#DEFFFFFF" VerticalAlignment="Top" Style="{StaticResource SubheaderTextStyle}" Height="30" TextAlignment="Center" HorizontalAlignment="Left" FontFamily="Segoe UI Light"/>
+                        </Grid>
+                        
+                        
+                    </StackPanel>
+                </Grid>
+            </GridViewItem>
+
+            <GridViewItem MinWidth="800" Margin="40,140,120,0" Style="{StaticResource CustomGridViewItemStyle}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.Column="2">
+				<Grid Margin="0,0,0,100">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="389*"/>
+                        <RowDefinition Height="99*"/>
+                    </Grid.RowDefinitions>
+                    <!--<Border BorderBrush="Black" BorderThickness="1"/>-->
+                    <maps:XamGeographicMap x:Name="map" Grid.Row="1"
+                                   DefaultInteraction="DragPan"
+                                   HorizontalAlignment="Stretch"
+                                   WindowRectMinWidth="0.00000000001"
+                                   OverviewPlusDetailPaneVisibility="Collapsed"
+                                   WindowResponse="Immediate" Margin="0,10,0,0" WorldRect="-78.9844,36.9313,6.01281,6.01516" WindowRect="0.3,0,0.9,0.9" BorderThickness="0" Background="#7F000000">
+                        <maps:XamGeographicMap.Series>
+                            <maps:GeographicPolylineSeries ItemsSource="{Binding PolylineWrapper}" ShapeMemberPath="Points">
+                                <maps:GeographicPolylineSeries.ShapeStyle>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Stroke" Value="#FFAF37FC"/>
+                                        <Setter Property="Opacity" Value="0.85"/>
+                                        <Setter Property="StrokeThickness" Value="8"/>
+                                        <Setter Property="StrokeLineJoin" Value="Round"/>
+                                    </Style>
+                                </maps:GeographicPolylineSeries.ShapeStyle>
+                            </maps:GeographicPolylineSeries>
+                            <maps:GeographicSymbolSeries ItemsSource="{Binding PointsOfInterest}" LongitudeMemberPath="Longitude" LatitudeMemberPath="Latitude">
+                                <maps:GeographicSymbolSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Height="18" Width="19">
+                                            <Image Source="Assets/dot2.png" Stretch="Fill"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </maps:GeographicSymbolSeries.MarkerTemplate>
+                            </maps:GeographicSymbolSeries>
+                        </maps:XamGeographicMap.Series>
+                        <maps:XamGeographicMap.BackgroundContent>
+                            <maps:OpenStreetMapImagery></maps:OpenStreetMapImagery>
+                        </maps:XamGeographicMap.BackgroundContent>
+                    </maps:XamGeographicMap>
+                    <Grid Margin="0,10,0,0" Grid.Row="2">
+                        <Charts:XamDataChart x:Name="chart" 
+                    		Padding="0"  PlotAreaBackground="Black" CrosshairVisibility="Visible" GridMode="None"  PlotAreaBorderThickness="0" WindowResponse="Immediate" Margin="0" SeriesCursorMouseMove="chart_SeriesCursorMouseMove_1">
+
+                            <Charts:XamDataChart.Axes>
+                                <Charts:NumericYAxis x:Name="AltitudeYAxis" MaximumValue="{Binding MaxAltitude.Altitude}" MinimumValue="{Binding MinAltitude.Altitude}">
+                                    <Charts:NumericYAxis.LabelSettings>
+                                        <Charts:AxisLabelSettings Visibility="Collapsed"/>
+                                    </Charts:NumericYAxis.LabelSettings>
+                                </Charts:NumericYAxis>
+                                <Charts:NumericYAxis x:Name="PaceYAxis" MaximumValue="{Binding MaxPaceRange}" MinimumValue="0">
+                                    <Charts:NumericYAxis.LabelSettings>
+                                        <Charts:AxisLabelSettings Visibility="Collapsed"/>
+                                    </Charts:NumericYAxis.LabelSettings>
+                                </Charts:NumericYAxis>
+                                <Charts:CategoryXAxis x:Name="AltitudeXAxis" ItemsSource="{Binding Path}"/>
+                                <Charts:CategoryXAxis x:Name="PaceXAxis" ItemsSource="{Binding GPSPoints}"/>
+                            </Charts:XamDataChart.Axes>
+                            <Charts:XamDataChart.Series>
+                                <!--<Charts:LineSeries Brush="#FFAF37FC" FontFamily="Global User Interface" ItemsSource="{Binding GPSPoints}" MarkerType="None" Title="AveragePace" ValueMemberPath="AvgPaceInMinPerMile" XAxis="{Binding ElementName=PaceXAxis}" YAxis="{Binding ElementName=PaceYAxis}"/>-->
+                                <!--<Charts:LineSeries Brush="#FFAF37FC" FontFamily="Global User Interface" ItemsSource="{Binding AveragePace}" Margin="0" MarkerType="None" Title="AveragePace" XAxis="{Binding ElementName=PaceXAxis}" YAxis="{Binding ElementName=PaceYAxis}" MinHeight="20"/>-->
+                                <Charts:AreaSeries FontFamily="Global User Interface" ItemsSource="{Binding Path}" Legend="{Binding ElementName=MyLegend}" Title="Elevation" ValueMemberPath="Altitude" XAxis="{Binding ElementName=AltitudeXAxis}" YAxis="{Binding ElementName=AltitudeYAxis}"/>
+                                <Charts:LineSeries Brush="Transparent" FontFamily="Global User Interface" ItemsSource="{Binding GPSPoints}" MarkerType="None" TrendLineBrush="#FFAF37FC" TrendLineType="SimpleAverage" TrendLinePeriod="10" Title="AveragePace" ValueMemberPath="CurrentPaceInMinPerMile" XAxis="{Binding ElementName=PaceXAxis}" YAxis="{Binding ElementName=PaceYAxis}" TrendLineThickness="2.5" />
+                            </Charts:XamDataChart.Series>
+                        </Charts:XamDataChart>
+                        <Canvas x:Name="overlay" IsHitTestVisible="False" />
+                    </Grid>
+                </Grid>
+			</GridViewItem>
+
+            <!--<GridViewItem Margin="60,0,46,80" Width="800" Height="200" Style="{StaticResource CustomGridViewItemStyle}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Style="{StaticResource GroupHeaderTextStyle}" Text="Chart"/>
+                    <Border BorderBrush="Black" BorderThickness="1"/>
+                    <StackPanel>
+                    <Charts:XamDataChart x:Name="chart"
+                                   Grid.Row="1"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch"
+                                   WindowResponse="Immediate" Margin="0,10,0,0" GridMode="None" CrosshairVisibility="Collapsed">
+                        
+                        <Charts:XamDataChart.Axes>
+                            <Charts:NumericYAxis x:Name="AltitudeYAxis" MaximumValue="{Binding MaxAltitude.Altitude}" MinimumValue="{Binding MinAltitude.Altitude}"  >
+                                <Charts:NumericYAxis.LabelSettings>
+                                    <Charts:AxisLabelSettings Visibility="Collapsed"/>
+                                </Charts:NumericYAxis.LabelSettings>
+                            </Charts:NumericYAxis>
+                            <Charts:NumericYAxis x:Name="PaceYAxis" MinimumValue="0" MaximumValue="14">
+                                <Charts:NumericYAxis.LabelSettings>
+                                    <Charts:AxisLabelSettings Visibility="Collapsed"/>
+                                </Charts:NumericYAxis.LabelSettings>
+                            </Charts:NumericYAxis>
+                            <Charts:CategoryXAxis x:Name="AltitudeXAxis" ItemsSource="{Binding Path}"/>
+                            <Charts:CategoryXAxis x:Name="PaceXAxis" ItemsSource="{Binding GPSPoints}"/>
+                        </Charts:XamDataChart.Axes>
+                        <Charts:XamDataChart.Series>
+                            <Charts:AreaSeries Legend="{Binding ElementName=MyLegend}" Title="Elevation" XAxis="{Binding ElementName=AltitudeXAxis}" YAxis="{Binding ElementName=AltitudeYAxis}" ItemsSource="{Binding Path}" ValueMemberPath="Altitude" FontFamily="Global User Interface"/>
+                            <Charts:LineSeries Title="AveragePace" XAxis="{Binding ElementName=PaceXAxis}" Brush="Transparent" MarkerType="None" YAxis="{Binding ElementName=PaceYAxis}" ItemsSource="{Binding GPSPoints}" ValueMemberPath="CurrentPaceInMinPerMile" TrendLineType="SimpleAverage" TrendLineBrush="Blue" TrendLinePeriod="10" FontFamily="Global User Interface"/>
+                            <Charts:LineSeries Title="AveragePace" XAxis="{Binding ElementName=PaceXAxis}" Brush="Blue" MarkerType="None" YAxis="{Binding ElementName=PaceYAxis}" ItemsSource="{Binding GPSPoints}" ValueMemberPath="AvgPaceInMinPerMile" FontFamily="Global User Interface"/>
+                        </Charts:XamDataChart.Series>
+                    </Charts:XamDataChart>
+                    <Charts:ItemLegend x:Name="MyLegend" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Legend" Margin="20" />
+                    </StackPanel>
+                </Grid>
+            </GridViewItem>-->
+        </Grid>
+
+        <!-- Vertical scrolling list only used when snapped -->
+
+        <!-- Back button and page title -->
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" Text="Running Total"/>
+        </Grid>
+        <Grid x:Name="snappedGrid" Width="320" Grid.Row="1" Margin="0" Visibility="Collapsed">
+        	<Grid.RowDefinitions>
+        		<RowDefinition Height="32"/>
+        		<RowDefinition Height="80"/>
+        		<RowDefinition Height="379*"/>
+        		<RowDefinition Height="137*"/>
+        	</Grid.RowDefinitions>
+        	<Grid Background="#7F000000" Margin="20,0,16,0" Grid.Row="1">
+        		<Grid.ColumnDefinitions>
+        			<ColumnDefinition Width="*"/>
+        			<ColumnDefinition Width="*"/>
+        			<ColumnDefinition Width="*"/>
+        		</Grid.ColumnDefinitions>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding TotalDistanceRun}" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light" Margin="0,10,0,0"/>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding TotalTime}" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light" Grid.Column="1" Margin="0,10,0,0"/>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding CaloriesBurned}" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light" Grid.Column="2" Margin="0,10,0,0"/>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="miles" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14.667" FontWeight="SemiLight" Margin="0,45,0,0"/>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="duration" VerticalAlignment="Top" Grid.Column="1" FontFamily="Segoe UI" FontSize="14.667" FontWeight="SemiLight" Margin="0,45,0,0"/>
+        		<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="calories" VerticalAlignment="Top" Grid.Column="2" FontFamily="Segoe UI" FontSize="14.667" FontWeight="SemiLight" Margin="0,45,0,0"/>
+        	</Grid>
+			<maps:XamGeographicMap x:Name="snappedMap" Grid.Row="2"
+                                   DefaultInteraction="DragPan"
+                                   HorizontalAlignment="Stretch"
+                                   WindowRectMinWidth="0.00000000001"
+                                   OverviewPlusDetailPaneVisibility="Collapsed"
+                                   WindowResponse="Immediate" Margin="20,20,18,0" WorldRect="-78.9844,36.9313,6.01281,6.01516" WindowRect="0.3,0,0.9,0.9" BorderThickness="0">
+                        <maps:XamGeographicMap.Series>
+                            <maps:GeographicPolylineSeries ItemsSource="{Binding PolylineWrapper}" ShapeMemberPath="Points">
+                                <maps:GeographicPolylineSeries.ShapeStyle>
+                                    <Style TargetType="Path">
+                                        <Setter Property="Stroke" Value="#FFAF37FC"/>
+                                        <Setter Property="Opacity" Value="0.85"/>
+                                        <Setter Property="StrokeThickness" Value="8"/>
+                                        <Setter Property="StrokeLineJoin" Value="Round"/>
+                                    </Style>
+                                </maps:GeographicPolylineSeries.ShapeStyle>
+                            </maps:GeographicPolylineSeries>
+                            <maps:GeographicSymbolSeries ItemsSource="{Binding PointsOfInterest}" LongitudeMemberPath="Longitude" LatitudeMemberPath="Latitude">
+                                <maps:GeographicSymbolSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Height="18" Width="19">
+                                            <Image Source="Assets/dot2.png" Stretch="Fill"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </maps:GeographicSymbolSeries.MarkerTemplate>
+                            </maps:GeographicSymbolSeries>
+                        </maps:XamGeographicMap.Series>
+                        <maps:XamGeographicMap.BackgroundContent>
+                            <maps:OpenStreetMapImagery></maps:OpenStreetMapImagery>
+                        </maps:XamGeographicMap.BackgroundContent>
+                    </maps:XamGeographicMap>
+			<TextBlock TextWrapping="Wrap" Text="{Binding RunDate}" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14.667" FontWeight="SemiLight" Margin="20,0,18,0" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="96,137,10,56"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!--
+                    The back button and title have different styles when snapped, and the list representation is substituted
+                    for the grid displayed in all other view states
+                -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                			<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                			<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Visibility">
+                			<DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                		</ObjectAnimationUsingKeyFrames>
+                		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="snappedGrid">
+                			<DiscreteObjectKeyFrame KeyTime="0">
+                				<DiscreteObjectKeyFrame.Value>
+                					<Visibility>Visible</Visibility>
+                				</DiscreteObjectKeyFrame.Value>
+                			</DiscreteObjectKeyFrame>
+                		</ObjectAnimationUsingKeyFrames>
+                	</Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</common:LayoutAwarePage>

@@ -1,0 +1,8 @@
+﻿Running Total, Copyright Infragistics 2012
+Author: Brent Schooley (http://twitter.com/brentschooley)
+Visual Design: Thomas Rausch
+Additional development support: Aaron Schooley (http://twitter.com/aaronschooley)
+
+This is a preview version of Running Total, an application that will eventually be available on the Windows Store.
+The main purpose of this application is to serve as a reference for you to build your own apps using NetAdvantage for Windows UI.
+You may use portions of the code in your own applications, but you may not redistribute this application or its data model as your own.

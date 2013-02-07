@@ -1,0 +1,307 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ig="using:Infragistics.Controls"
+    xmlns:shared="using:Infragistics"
+    xmlns:local="using:Infragistics.Controls.Maps"
+    xmlns:charts="using:Infragistics.Controls.Charts">
+
+   
+    <!-- ********************************** COLORS **********************************-->
+    <Color x:Key="Color_01">#FFD7D7D7</Color>
+    <Color x:Key="Color_02">#FFB9B9B9</Color>
+    <Color x:Key="Color_03">#FFF9F9F9</Color>
+    <Color x:Key="Color_04">#FF00AADE</Color>
+    <Color x:Key="Color_003">#FF858585</Color>
+    <Color x:Key="Color_05">#FF606060</Color>
+    <Color x:Key="Color_023">#337A7A7A</Color>
+
+    <!-- ********************************** BRUSHES **********************************-->
+
+    <SolidColorBrush x:Key="BackgroundFill" Color="{StaticResource Color_03}" />
+    <SolidColorBrush x:Key="BaseBorderBrush" Color="{StaticResource Color_01}"/>
+    <SolidColorBrush x:Key="SeriesBrush" Color="{StaticResource Color_04}"/>
+    <SolidColorBrush x:Key="GenericBorder" Color="{StaticResource Color_02}"/>
+    <SolidColorBrush x:Key="GenericBackground" Color="{StaticResource Color_01}"/>
+    <SolidColorBrush x:Key="MarkerFillBrush" Color="{StaticResource Color_003}"/>
+    <SolidColorBrush x:Key="MarkerOutlineBrush" Color="{StaticResource Color_003}"/>
+
+    <SolidColorBrush x:Key="WorldStroke" Color="{StaticResource Color_023}"/>
+    <SolidColorBrush x:Key="WindowStroke" Color="{StaticResource Color_04}"/>
+    <SolidColorBrush x:Key="OutlineBrush" Color="{StaticResource Color_05}" />
+
+    <local:ImageUriConverter x:Key="GetImageConverter" />
+
+    <!-- *********************************  DATA TEMPLATES  ********************************* -->
+    <DataTemplate x:Key="CircleMarkerTemplate">
+        <Path Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5">
+            <Path.Data>
+                <PathGeometry>
+                    <PathGeometry.Figures>
+                        <PathFigure StartPoint="0,0" >
+                            <PathFigure.Segments>
+                                <ArcSegment Size="4,4" RotationAngle="0" IsLargeArc="True" SweepDirection="Clockwise" Point="0,1"/>
+                                <ArcSegment Size="4,4" RotationAngle="0" IsLargeArc="False" SweepDirection="Clockwise" Point="0,0"/>
+                            </PathFigure.Segments>
+                        </PathFigure >
+                    </PathGeometry.Figures>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TriangleMarkerTemplate">
+        <Polygon Points="0, 0 4, 8 8, 0" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="PyramidMarkerTemplate">
+        <Polygon Points="0, 8 4, 0 8, 8" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="SquareMarkerTemplate">
+        <Polygon Points="0 0 0 8 8 8 8 0" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DiamondMarkerTemplate">
+        <Polygon Points="0 4 4 8 8 4 4 0" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="PentagonMarkerTemplate">
+        <Polygon Points="4 0 0.1956 2.764 1.65 7.236 6.35 7.236 7.8044 2.764" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="HexagonMarkerTemplate">
+        <Polygon Points="4 0 0.536 2 0.536 6 4 8 7.464 6 7.464 2" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TetragramMarkerTemplate">
+        <Polygon Points="4 0 2.5856 2.5856 0 4 2.5856 5.4144 4 8 5.4144 5.4144 8 4 5.4144 2.5856" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PentagramMarkerTemplate">
+        <Polygon Points="4 0 2.8244 2.382 0.1956 2.764 2.098 4.618 1.6488 7.236 4 6 6.3512 7.236 5.902 4.618 7.8044 2.764 5.1756 2.382" Stretch="Fill" Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="HexagramMarkerTemplate">
+        <Polygon Points="4 0 3 2.268 0.536 2 2 4 0.536 6 3 5.732 4 8 5 5.732 7.464 6 6 4 7.464 2 5 2.268" Stretch="Fill"  Fill="{Binding Series.ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" StrokeThickness="0.5"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LegendItemTemplate">
+        <StackPanel Orientation="Horizontal" Margin="1" Visibility="{Binding Series.Visibility}">
+            <ContentPresenter Content="{Binding}" ContentTemplate="{Binding Series.LegendItemBadgeTemplate}" />
+            <ContentPresenter Content="{Binding Series.Title}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LegendItemPointBadgeTemplate">
+        <ContentPresenter Width="11" Height="11" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 2 0"
+                ContentTemplate="{Binding Series.ActualMarkerTemplate}" Content="{Binding}"/>
+    </DataTemplate>
+
+    <!-- ********************************** GeographicMapImagery **********************************-->
+    <Style x:Key="GeographicMapImageryStyle" TargetType="local:GeographicMapImagery">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:GeographicMapImagery">
+                    <local:XamMultiScaleImage x:Name="MultiScaleImage" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="local:GeographicMapImagery" BasedOn="{StaticResource GeographicMapImageryStyle}" />
+
+    <Style TargetType="local:OpenStreetMapImagery" BasedOn="{StaticResource GeographicMapImageryStyle}" >
+    </Style>
+    <Style TargetType="local:BingMapsMapImagery" BasedOn="{StaticResource GeographicMapImageryStyle}" >
+    </Style>
+    <Style TargetType="local:CloudMadeMapImagery" BasedOn="{StaticResource GeographicMapImageryStyle}" >
+    </Style>
+    
+
+    <!-- ********************************** Chart preview path style **********************************-->
+    <Style x:Key="PreviewPathStyle" TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource GenericBackground}"/>
+        <Setter Property="Opacity" Value="0.4"/>
+    </Style>
+
+    <!-- ********************************** Chart crosshair line style **********************************-->
+    <Style x:Key="CrosshairLineStyle" TargetType="Line">
+        <Setter Property="Stroke" Value="{StaticResource GenericBorder}"/>
+        <Setter Property="StrokeThickness" Value="1.4"/>
+    </Style>
+
+    <!-- ********************************** GeographicMap **********************************-->
+    <Style TargetType="local:XamGeographicMap" x:Key="GeographicMapStyle">
+        <Setter Property="PlotAreaBackground" Value="Transparent" />
+        
+        <!--<Setter Property="Background" Value="{StaticResource BackgroundFill}"/>-->
+        <Setter Property="BorderBrush" Value="{StaticResource BaseBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CircleMarkerTemplate" Value="{StaticResource CircleMarkerTemplate}"/>
+        <Setter Property="TriangleMarkerTemplate" Value="{StaticResource TriangleMarkerTemplate}"/>
+        <Setter Property="PyramidMarkerTemplate" Value="{StaticResource PyramidMarkerTemplate}"/>
+        <Setter Property="SquareMarkerTemplate" Value="{StaticResource SquareMarkerTemplate}"/>
+        <Setter Property="DiamondMarkerTemplate" Value="{StaticResource DiamondMarkerTemplate}"/>
+        <Setter Property="PentagonMarkerTemplate" Value="{StaticResource PentagonMarkerTemplate}"/>
+        <Setter Property="HexagonMarkerTemplate" Value="{StaticResource HexagonMarkerTemplate}"/>
+        <Setter Property="TetragramMarkerTemplate" Value="{StaticResource TetragramMarkerTemplate}"/>
+        <Setter Property="PentagramMarkerTemplate" Value="{StaticResource PentagramMarkerTemplate}"/>
+        <Setter Property="HexagramMarkerTemplate" Value="{StaticResource HexagramMarkerTemplate}"/>
+        <Setter Property="PreviewPathStyle" Value="{StaticResource PreviewPathStyle}"/>
+        <Setter Property="CrosshairLineStyle" Value="{StaticResource CrosshairLineStyle}"/>
+        <Setter Property="CrosshairVisibility" Value="Collapsed" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                        <ContentPresenter x:Name="ContentPresenter" Margin="{TemplateBinding Padding}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="DefaultInteraction" Value="DragPan" />
+        <Setter Property="HorizontalZoomable" Value="True" />
+        <Setter Property="VerticalZoomable" Value="True" />
+        <Setter Property="OverviewPlusDetailPaneVisibility" Value="Visible" />
+        <Setter Property="WindowResponse" Value="Immediate" />
+        <Setter Property="OverviewPlusDetailPaneStyle">
+            <Setter.Value>
+                <Style TargetType="ig:XamOverviewPlusDetailPane">
+                    <Setter Property="ZoomTo100ButtonVisibility" Value="Collapsed" />
+                    <Setter Property="InteractionStatesToolVisibility" Value="Visible" />
+                    <Setter Property="ScaleToFitButtonToolTip" Value="Reset Zoom (100%)" />
+                    <Setter Property="ZoomLevelLargeChange" Value="0.2" />
+                    <!-- thumbnail area of the whole world in the OverviewPlusDetailPane-->
+                    <Setter Property="WorldStyle">
+                        <Setter.Value>
+                            <Style TargetType="Path">
+                                <Setter Property="Stroke" Value="{StaticResource WorldStroke}"/>
+                                <Setter Property="StrokeThickness" Value="1"/>
+                                <Setter Property="Fill">
+                                    <Setter.Value>
+                                        <ImageBrush Stretch="Uniform" ImageSource="ms-appx:///InfragisticsWRT.Controls.Maps.XamGeographicMap.v13.1/Resources/OPDThumbnail.png" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                    <!-- visible area of the world in the OverviewPlusDetailPane-->
+                    <Setter Property="WindowStyle">
+                        <Setter.Value>
+                            <Style TargetType="Path">
+                                <Setter Property="Stroke" Value="{StaticResource WindowStroke}"/>
+                                <Setter Property="StrokeThickness" Value="2"/>
+                                <Setter Property="Fill" Value="Transparent"/>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="local:XamGeographicMap" BasedOn="{StaticResource GeographicMapStyle}"/>
+
+    <!-- ********************************** SERIES STYLES **********************************-->
+    <Style x:Key="seriesStyle" TargetType="charts:Series">
+        <Setter Property="MinWidth" Value="8"/>
+        <Setter Property="Thickness" Value="1"/>
+        <Setter Property="MinHeight" Value="8"/>
+        <Setter Property="Brush" Value="{StaticResource SeriesBrush}"/>
+        <!-- do not set a default value for Outline, or else the XamDataChart.Outlines property will be ineffective. -->
+        <Setter Property="LegendItemTemplate" Value="{StaticResource LegendItemTemplate}" />
+        <Setter Property="LegendItemBadgeTemplate" Value="{StaticResource LegendItemPointBadgeTemplate}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="charts:Series">
+                    <Grid>
+                        <Canvas x:Name="RootCanvas" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="charts:Series" BasedOn="{StaticResource seriesStyle}"/>
+
+    <Style x:Key="seriesStyleWithBackgroundImage" TargetType="charts:Series" BasedOn="{StaticResource seriesStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="charts:Series">
+                    <Grid>
+                        <Image x:Name="RootImage" />
+                        <Canvas x:Name="RootCanvas" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GeographicSymbolSeriesStyle" TargetType="local:GeographicSymbolSeries" BasedOn="{StaticResource seriesStyle}">
+        <Setter Property="MarkerType" Value="Automatic" />
+        <Setter Property="MarkerBrush" Value="{StaticResource MarkerFillBrush}" />
+        <Setter Property="MarkerOutline" Value="{StaticResource MarkerOutlineBrush}" />
+    </Style>
+    <Style TargetType="local:GeographicSymbolSeries" BasedOn="{StaticResource GeographicSymbolSeriesStyle}"/>
+
+    <Style TargetType="local:GeographicProportionalSymbolSeries" BasedOn="{StaticResource seriesStyle}">
+        <Setter Property="MarkerType" Value="Automatic" />
+    </Style>
+
+    <Style x:Key="GeographicShapeSeriesStyle" TargetType="local:GeographicShapeSeries" BasedOn="{StaticResource seriesStyle}" />
+    <Style TargetType="local:GeographicShapeSeries" BasedOn="{StaticResource GeographicShapeSeriesStyle}"/>
+
+    <Style x:Key="ShapeSeriesStyle" TargetType="charts:ShapeSeries" BasedOn="{StaticResource seriesStyleWithBackgroundImage}" />
+    <Style TargetType="charts:ShapeSeries" BasedOn="{StaticResource ShapeSeriesStyle}"/>
+
+    <Style x:Key="GeographicShapeControlSeriesStyle" TargetType="local:GeographicShapeControlSeries" BasedOn="{StaticResource seriesStyle}" />
+    <Style TargetType="local:GeographicShapeControlSeries" BasedOn="{StaticResource GeographicShapeControlSeriesStyle}"/>
+
+    <Style x:Key="ShapeControlSeriesStyle" TargetType="charts:ShapeControlSeries" BasedOn="{StaticResource seriesStyleWithBackgroundImage}" />
+    <Style TargetType="charts:ShapeControlSeries" BasedOn="{StaticResource ShapeControlSeriesStyle}"/>
+
+    <Style x:Key="GeographicPolylineSeriesStyle" TargetType="local:GeographicPolylineSeries" BasedOn="{StaticResource seriesStyle}">
+        <Setter Property="Outline" Value="{StaticResource OutlineBrush}" />
+    </Style>
+    <Style TargetType="local:GeographicPolylineSeries" BasedOn="{StaticResource GeographicPolylineSeriesStyle}"/>
+
+    <Style x:Key="PolylineSeriesStyle" TargetType="charts:PolylineSeries" BasedOn="{StaticResource seriesStyleWithBackgroundImage}" />
+    <Style TargetType="charts:PolylineSeries" BasedOn="{StaticResource PolylineSeriesStyle}"/>
+
+    <Style x:Key="GeographicContourLineSeriesStyle" TargetType="local:GeographicContourLineSeries" BasedOn="{StaticResource seriesStyle}" />
+    <Style TargetType="local:GeographicContourLineSeries" BasedOn="{StaticResource GeographicContourLineSeriesStyle}"/>
+
+    <Style x:Key="ContourLineSeriesStyle" TargetType="charts:ContourLineSeries" BasedOn="{StaticResource seriesStyle}" />
+    <Style TargetType="charts:ContourLineSeries" BasedOn="{StaticResource ContourLineSeriesStyle}"/>
+
+    <Style x:Key="ScatterAreaSeriesStyle" TargetType="charts:ScatterAreaSeries" BasedOn="{StaticResource seriesStyleWithBackgroundImage}" />
+    <Style TargetType="charts:ScatterAreaSeries" BasedOn="{StaticResource ScatterAreaSeriesStyle}"/>
+
+    <Style x:Key="GeographicScatterAreaSeriesStyle" TargetType="local:GeographicScatterAreaSeries" BasedOn="{StaticResource seriesStyleWithBackgroundImage}" />
+    <Style TargetType="local:GeographicScatterAreaSeries" BasedOn="{StaticResource GeographicScatterAreaSeriesStyle}"/>
+
+    <Style x:Key="GeographicHighDensityScatterSeriesStyle" TargetType="local:GeographicHighDensityScatterSeries" BasedOn="{StaticResource seriesStyle}" />
+    <Style TargetType="local:GeographicHighDensityScatterSeries" BasedOn="{StaticResource GeographicHighDensityScatterSeriesStyle}"/>
+
+    <!-- ********************************** SHAPE STYLES **********************************-->
+    <Style TargetType="charts:ShapeControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="charts:ShapeControl">
+                    <ContentControl>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation By="3" Duration="0:00:00.25" Storyboard.TargetName="RootElement" Storyboard.TargetProperty="StrokeThickness" AutoReverse="True" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Normal" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <!-- [DN Apr 9 2012 Data={TemplateBinding Data} will throw inexplicable exceptions in Silverlight, so instead we use DataContext={TemplateBinding Data} and Data={Binding} -->
+                        <Path x:Name="RootElement" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding BorderThickness}" />
+                    </ContentControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
