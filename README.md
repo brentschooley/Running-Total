@@ -1,4 +1,4 @@
-Running-Total
+Running Total
 =============
 
 Reference app for Windows 8 (Infragistics and Designing for Windows 8)
